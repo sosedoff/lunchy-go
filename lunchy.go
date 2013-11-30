@@ -177,7 +177,7 @@ func main() {
   default:
     printUsage()
     os.Exit(1)
-  case "list":
+  case "list", "ls":
     printList()
     return
   case "status":
