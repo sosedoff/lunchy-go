@@ -116,7 +116,7 @@ func startDaemon(name string) {
 
   if err != nil {
     fmt.Println("Failed to load", name, ":", err)
-    os.Exit(1)
+    return
   }
 
   fmt.Println("started", name)
@@ -143,7 +143,7 @@ func stopDaemon(name string) {
 
   if err != nil {
     fmt.Println("Failed to unload", name, ":", err)
-    os.Exit(1)
+    return
   }
 
   fmt.Println("stopped", name)
