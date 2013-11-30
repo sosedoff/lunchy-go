@@ -149,6 +149,22 @@ func stopDaemon(name string) {
   fmt.Println("stopped", name)
 }
 
+func restartDaemons(args []string) {
+  if len(args) < 3 {
+    fmt.Println("Pattern required")
+    os.Exit(1)
+  }
+
+  pattern := args[2]
+
+  for _, name := range getPlists() {
+    if strings.Index(name, pattern) != -1 {
+      stopDaemon(name)
+      startDaemon(name)
+    }
+  }
+}
+
 func main() {
   args := os.Args
 
@@ -172,6 +188,9 @@ func main() {
     return
   case "stop":
     stopDaemons(args)
+    return
+  case "restart":
+    restartDaemons(args)
     return
   }
 }
