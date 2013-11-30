@@ -290,6 +290,9 @@ func main() {
   default:
     printUsage()
     os.Exit(1)
+  case "help":
+    printUsage()
+    return
   case "list", "ls":
     printList()
     return
