@@ -21,3 +21,4 @@ _testmain.go
 
 *.exe
 lunchy
+.DS_Store
