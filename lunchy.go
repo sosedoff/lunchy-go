@@ -50,5 +50,12 @@ func main() {
     os.Exit(1)
   }
 
-  printList()
+  switch args[1] {
+  default:
+    printUsage()
+    os.Exit(1)
+  case "list":
+    printList()
+    return
+  }
 }
