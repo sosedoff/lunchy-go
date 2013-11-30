@@ -193,6 +193,40 @@ func printPlistContent(name string) {
   fmt.Printf(string(contents))
 }
 
+func editPlist(args []string) {
+  if len(args) < 3 {
+    fmt.Println("Name required")
+    os.Exit(1)
+  }
+
+  name := args[2]
+
+  for _, plist := range getPlists() {
+    if strings.Index(plist, name) != -1 {
+      editPlistContent(plist)
+      return
+    }
+  }
+}
+
+func editPlistContent(name string) {
+  path := fmt.Sprintf("%s/Library/LaunchAgents/%s.plist", os.Getenv("HOME"), name)
+  editor := os.Getenv("EDITOR")
+
+  if len(editor) == 0 {
+    fmt.Println("EDITOR environment variable is not set")
+    os.Exit(1)
+  }
+
+  cmd := exec.Command(editor, path)
+  
+  cmd.Stdin = os.Stdin
+  cmd.Stdout = os.Stdout
+
+  cmd.Start()
+  cmd.Wait()
+}
+
 func main() {
   args := os.Args
 
@@ -222,6 +256,9 @@ func main() {
     return
   case "show":
     showPlist(args)
+    return
+  case "edit":
+    editPlist(args)
     return
   }
 }
