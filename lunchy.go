@@ -3,6 +3,7 @@ package main
 import(
   "fmt"
   "os"
+  "io"
   "io/ioutil"
   "path/filepath"
   "os/exec"
@@ -16,6 +17,32 @@ const(
 func printUsage() {
   fmt.Printf("Lunchy %s, the friendly launchctl wrapper\n", LUNCHY_VERSION)
   fmt.Println("Usage: lunchy [start|stop|restart|list|status|install|show|edit] [options]")
+}
+
+func fileExists(path string) bool {
+  _, err := os.Stat(path)
+  return err == nil
+}
+
+func fileCopy(src string, dst string) error {
+  s, err := os.Open(src)
+  if err != nil {
+    return err
+  }
+
+  defer s.Close()
+
+  d, err := os.Create(dst)
+  if err != nil {
+    return err
+  }
+
+  if _, err := io.Copy(d, s); err != nil {
+    d.Close()
+    return err
+  }
+
+  return d.Close()
 }
 
 func findPlists(path string) []string {
@@ -227,6 +254,40 @@ func editPlistContent(name string) {
   cmd.Wait()
 }
 
+func installPlist(args []string) {
+  if len(args) < 3 {
+    fmt.Println("Path required")
+    os.Exit(1)
+  }
+
+  path := args[2]
+
+  if !fileExists(path) {
+    fmt.Println("File", path, "does not exist")
+    os.Exit(1)
+  }
+
+  info, _ := os.Stat(path)
+  base_path := fmt.Sprintf("%s/%s", os.Getenv("HOME"), "Library/LaunchAgents")
+  new_path := fmt.Sprintf("%s/%s", base_path, info.Name())
+
+  if fileExists(new_path) {
+    if os.Remove(new_path) != nil {
+      fmt.Println("Failed to delete existing file", new_path)
+      os.Exit(1)
+    }
+  }
+
+  err := fileCopy(path, new_path)
+
+  if err != nil {
+    fmt.Println("Failed to copy file")
+    os.Exit(1)
+  }
+
+  fmt.Println(path, "installed to", base_path)
+}
+
 func main() {
   args := os.Args
 
@@ -259,6 +320,9 @@ func main() {
     return
   case "edit":
     editPlist(args)
+    return
+  case "install":
+    installPlist(args)
     return
   }
 }
