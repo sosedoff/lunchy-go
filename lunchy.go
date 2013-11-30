@@ -165,6 +165,34 @@ func restartDaemons(args []string) {
   }
 }
 
+func showPlist(args []string) {
+  if len(args) < 3 {
+    fmt.Println("Name required")
+    os.Exit(1)
+  }
+
+  name := args[2]
+
+  for _, plist := range getPlists() {
+    if strings.Index(plist, name) != -1 {
+      printPlistContent(plist)
+      return
+    }
+  }
+}
+
+func printPlistContent(name string) {
+  path := fmt.Sprintf("%s/Library/LaunchAgents/%s.plist", os.Getenv("HOME"), name)
+  contents, err := ioutil.ReadFile(path)
+
+  if err != nil {
+    fmt.Println(err)
+    os.Exit(1)
+  }
+
+  fmt.Printf(string(contents))
+}
+
 func main() {
   args := os.Args
 
@@ -191,6 +219,9 @@ func main() {
     return
   case "restart":
     restartDaemons(args)
+    return
+  case "show":
+    showPlist(args)
     return
   }
 }
