@@ -14,11 +14,6 @@ const(
   LUNCHY_VERSION = "0.1.0"
 )
 
-func printUsage() {
-  fmt.Printf("Lunchy %s, the friendly launchctl wrapper\n", LUNCHY_VERSION)
-  fmt.Println("Usage: lunchy [start|stop|restart|list|status|install|show|edit] [options]")
-}
-
 func fileExists(path string) bool {
   _, err := os.Stat(path)
   return err == nil
@@ -82,6 +77,11 @@ func sliceIncludes(slice []string, match string) bool {
   return false
 }
 
+func printUsage() {
+  fmt.Printf("Lunchy %s, the friendly launchctl wrapper\n", LUNCHY_VERSION)
+  fmt.Println("Usage: lunchy [start|stop|restart|list|status|install|show|edit] [options]")
+}
+
 func printList() {
   for _, file := range getPlists() {
     fmt.Println(file)
@@ -92,8 +92,7 @@ func printStatus(args []string) {
   out, err := exec.Command("launchctl", "list").Output()
 
   if err != nil {
-    fmt.Println("Failed to execute", err)
-    os.Exit(1)
+    fatal("failed to get process list")
   }
 
   pattern := ""
@@ -124,15 +123,15 @@ func printStatus(args []string) {
 
 func startDaemons(args []string) {
   if len(args) < 3 {
-    fmt.Println("Pattern required")
+    fmt.Println("name required")
     os.Exit(1)
   }
 
-  pattern := args[2]
+  name := args[2]
 
-  for _, name := range getPlists() {
-    if strings.Index(name, pattern) != -1 {
-      startDaemon(name)
+  for _, plist := range getPlists() {
+    if strings.Index(plist, name) != -1 {
+      startDaemon(plist)
     }
   }
 }
@@ -142,7 +141,7 @@ func startDaemon(name string) {
   _, err := exec.Command("launchctl", "load", path).Output()
 
   if err != nil {
-    fmt.Println("Failed to load", name, ":", err)
+    fmt.Println("failed to start", name)
     return
   }
 
@@ -151,15 +150,14 @@ func startDaemon(name string) {
 
 func stopDaemons(args []string) {
   if len(args) < 3 {
-    fmt.Println("Pattern required")
-    os.Exit(1)
+    fatal("name required")
   }
 
-  pattern := args[2]
+  name := args[2]
 
-  for _, name := range getPlists() {
-    if strings.Index(name, pattern) != -1 {
-      stopDaemon(name)
+  for _, plist := range getPlists() {
+    if strings.Index(plist, name) != -1 {
+      stopDaemon(plist)
     }
   }
 }
@@ -169,7 +167,7 @@ func stopDaemon(name string) {
   _, err := exec.Command("launchctl", "unload", path).Output()
 
   if err != nil {
-    fmt.Println("Failed to unload", name, ":", err)
+    fmt.Println("failed to stop", name)
     return
   }
 
@@ -178,24 +176,22 @@ func stopDaemon(name string) {
 
 func restartDaemons(args []string) {
   if len(args) < 3 {
-    fmt.Println("Pattern required")
-    os.Exit(1)
+    fatal("name required")
   }
 
-  pattern := args[2]
+  name := args[2]
 
-  for _, name := range getPlists() {
-    if strings.Index(name, pattern) != -1 {
-      stopDaemon(name)
-      startDaemon(name)
+  for _, plist := range getPlists() {
+    if strings.Index(plist, name) != -1 {
+      stopDaemon(plist)
+      startDaemon(plist)
     }
   }
 }
 
 func showPlist(args []string) {
   if len(args) < 3 {
-    fmt.Println("Name required")
-    os.Exit(1)
+    fatal("name required")
   }
 
   name := args[2]
@@ -213,8 +209,7 @@ func printPlistContent(name string) {
   contents, err := ioutil.ReadFile(path)
 
   if err != nil {
-    fmt.Println(err)
-    os.Exit(1)
+    fatal("unable to read plist")
   }
 
   fmt.Printf(string(contents))
@@ -222,8 +217,7 @@ func printPlistContent(name string) {
 
 func editPlist(args []string) {
   if len(args) < 3 {
-    fmt.Println("Name required")
-    os.Exit(1)
+    fatal("name required")
   }
 
   name := args[2]
@@ -241,8 +235,7 @@ func editPlistContent(name string) {
   editor := os.Getenv("EDITOR")
 
   if len(editor) == 0 {
-    fmt.Println("EDITOR environment variable is not set")
-    os.Exit(1)
+    fatal("EDITOR environment variable is not set")
   }
 
   cmd := exec.Command(editor, path)
@@ -256,36 +249,33 @@ func editPlistContent(name string) {
 
 func installPlist(args []string) {
   if len(args) < 3 {
-    fmt.Println("Path required")
-    os.Exit(1)
+    fatal("path required")
   }
 
   path := args[2]
 
   if !fileExists(path) {
-    fmt.Println("File", path, "does not exist")
-    os.Exit(1)
+    fatal("source file does not exist")
   }
 
   info, _ := os.Stat(path)
   base_path := fmt.Sprintf("%s/%s", os.Getenv("HOME"), "Library/LaunchAgents")
   new_path := fmt.Sprintf("%s/%s", base_path, info.Name())
 
-  if fileExists(new_path) {
-    if os.Remove(new_path) != nil {
-      fmt.Println("Failed to delete existing file", new_path)
-      os.Exit(1)
-    }
+  if fileExists(new_path) && os.Remove(new_path) != nil {
+    fatal("unable to delete existing plist")
   }
 
-  err := fileCopy(path, new_path)
-
-  if err != nil {
-    fmt.Println("Failed to copy file")
-    os.Exit(1)
+  if fileCopy(path, new_path) != nil {
+    fatal("failed to copy file")
   }
 
   fmt.Println(path, "installed to", base_path)
+}
+
+func fatal(message string) {
+  fmt.Println(message)
+  os.Exit(1)
 }
 
 func main() {
