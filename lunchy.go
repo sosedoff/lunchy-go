@@ -45,15 +45,6 @@ func getPlists() []string {
   return files
 }
 
-func printList() {
-  path  := fmt.Sprintf("%s/Library/LaunchAgents", os.Getenv("HOME"))
-  files := findPlists(path)
-
-  for _, file := range files {
-    fmt.Println(file)
-  }
-}
-
 func sliceIncludes(slice []string, match string) bool {
   for _, val := range slice {
     if val == match {
@@ -62,6 +53,12 @@ func sliceIncludes(slice []string, match string) bool {
   }
 
   return false
+}
+
+func printList() {
+  for _, file := range getPlists() {
+    fmt.Println(file)
+  }
 }
 
 func printStatus(args []string) {
