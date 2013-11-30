@@ -69,14 +69,28 @@ func printStatus(args []string) {
     os.Exit(1)
   }
 
+  pattern := ""
+
+  if len(args) == 3 {
+    pattern = args[2]
+  }
+
   installed := getPlists()
   lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-
+  
   for _, line := range lines {
     chunks := strings.Split(line, "\t")
 
-    if sliceIncludes(installed, chunks[2]) {
-      fmt.Println(line)
+    if len(pattern) > 0 {
+      if strings.Index(chunks[2], pattern) != -1 {
+        if sliceIncludes(installed, chunks[2]) {
+          fmt.Println(line)
+        }
+      }
+    } else {
+      if sliceIncludes(installed, chunks[2]) {
+        fmt.Println(line)
+      }
     }
   }
 }
