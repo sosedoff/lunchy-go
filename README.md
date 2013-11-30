@@ -49,12 +49,7 @@ org.mongodb.mongod
 
 ## Install
 
-Download a prebuilt binary for OSX from Github releases page and move it to bin dir:
-
-```
-cp ~/Downloads/lunchy /usr/local/bin
-chmod +x ./usr/local/bin/lunchy
-```
+Download a prebuilt binary for OSX from Bintray: https://bintray.com/sosedoff/generic/lunchy
 
 ## Usage
 
