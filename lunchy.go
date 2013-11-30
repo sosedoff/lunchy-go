@@ -122,6 +122,33 @@ func startDaemon(name string) {
   fmt.Println("started", name)
 }
 
+func stopDaemons(args []string) {
+  if len(args) < 3 {
+    fmt.Println("Pattern required")
+    os.Exit(1)
+  }
+
+  pattern := args[2]
+
+  for _, name := range getPlists() {
+    if strings.Index(name, pattern) != -1 {
+      stopDaemon(name)
+    }
+  }
+}
+
+func stopDaemon(name string) {
+  path := fmt.Sprintf("%s/Library/LaunchAgents/%s.plist", os.Getenv("HOME"), name)
+  _, err := exec.Command("launchctl", "unload", path).Output()
+
+  if err != nil {
+    fmt.Println("Failed to unload", name, ":", err)
+    os.Exit(1)
+  }
+
+  fmt.Println("stopped", name)
+}
+
 func main() {
   args := os.Args
 
@@ -142,6 +169,9 @@ func main() {
     return
   case "start":
     startDaemons(args)
+    return
+  case "stop":
+    stopDaemons(args)
     return
   }
 }
