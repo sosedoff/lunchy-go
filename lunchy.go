@@ -77,7 +77,7 @@ func printStatus(args []string) {
 
   installed := getPlists()
   lines := strings.Split(strings.TrimSpace(string(out)), "\n")
-  
+
   for _, line := range lines {
     chunks := strings.Split(line, "\t")
 
@@ -93,6 +93,33 @@ func printStatus(args []string) {
       }
     }
   }
+}
+
+func startDaemons(args []string) {
+  if len(args) < 3 {
+    fmt.Println("Pattern required")
+    os.Exit(1)
+  }
+
+  pattern := args[2]
+
+  for _, name := range getPlists() {
+    if strings.Index(name, pattern) != -1 {
+      startDaemon(name)
+    }
+  }
+}
+
+func startDaemon(name string) {
+  path := fmt.Sprintf("%s/Library/LaunchAgents/%s.plist", os.Getenv("HOME"), name)
+  _, err := exec.Command("launchctl", "load", path).Output()
+
+  if err != nil {
+    fmt.Println("Failed to load", name, ":", err)
+    os.Exit(1)
+  }
+
+  fmt.Println("started", name)
 }
 
 func main() {
@@ -112,6 +139,9 @@ func main() {
     return
   case "status":
     printStatus(args)
+    return
+  case "start":
+    startDaemons(args)
     return
   }
 }
