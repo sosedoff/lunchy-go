@@ -106,16 +106,17 @@ func printStatus(args []string) {
 
   for _, line := range lines {
     chunks := strings.Split(line, "\t")
+    clean_line := strings.Replace(line, "\t", " ", -1)
 
     if len(pattern) > 0 {
       if strings.Index(chunks[2], pattern) != -1 {
         if sliceIncludes(installed, chunks[2]) {
-          fmt.Println(line)
+          fmt.Println(clean_line)
         }
       }
     } else {
       if sliceIncludes(installed, chunks[2]) {
-        fmt.Println(line)
+        fmt.Println(clean_line)
       }
     }
   }
