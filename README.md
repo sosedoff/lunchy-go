@@ -21,6 +21,7 @@ simple operations that you perform all the time:
 - install [file]
 - show [pattern]
 - edit [pattern]
+- remove [pattern]
 
 where pattern is just a substring that matches the agent's plist filename. 
 
