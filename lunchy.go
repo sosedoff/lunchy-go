@@ -276,7 +276,7 @@ func installPlist(args []string) {
 
 func removePlist(args []string) {
   if len(args) < 3 {
-    fatal("pattern required")
+    fatal("name required")
   }
 
   name := args[2]
@@ -285,7 +285,7 @@ func removePlist(args []string) {
   for _, plist := range getPlists() {
     if strings.Index(plist, name) != -1 {
       path := fmt.Sprintf("%s/%s.plist", base_path, plist)
-      
+
       if os.Remove(path) == nil {
         fmt.Println("removed", path)
       } else {
