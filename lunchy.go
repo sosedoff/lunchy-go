@@ -274,6 +274,27 @@ func installPlist(args []string) {
   fmt.Println(path, "installed to", base_path)
 }
 
+func removePlist(args []string) {
+  if len(args) < 3 {
+    fatal("pattern required")
+  }
+
+  name := args[2]
+  base_path := fmt.Sprintf("%s/%s", os.Getenv("HOME"), "Library/LaunchAgents")
+
+  for _, plist := range getPlists() {
+    if strings.Index(plist, name) != -1 {
+      path := fmt.Sprintf("%s/%s.plist", base_path, plist)
+      
+      if os.Remove(path) == nil {
+        fmt.Println("removed", path)
+      } else {
+        fmt.Println("failed to remove", path)
+      }
+    }
+  }
+}
+
 func fatal(message string) {
   fmt.Println(message)
   os.Exit(1)
@@ -317,6 +338,9 @@ func main() {
     return
   case "install":
     installPlist(args)
+    return
+  case "remove":
+    removePlist(args)
     return
   }
 }
