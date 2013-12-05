@@ -98,7 +98,7 @@ lunchy edit redis
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Dan Sosedoff <dan.sosedoff@gmail.com>
+Copyright (c) 2013 Dan Sosedoff, <dan.sosedoff@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
