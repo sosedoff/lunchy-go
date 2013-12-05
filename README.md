@@ -52,6 +52,12 @@ org.mongodb.mongod
 
 Download a prebuilt binary for OSX from Bintray: https://bintray.com/sosedoff/generic/lunchy
 
+Or you can build it youself if you have Go installed:
+
+```
+cd lunchy && go build
+```
+
 ## Usage
 
 Add a new plist:
