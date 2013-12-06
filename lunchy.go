@@ -67,6 +67,16 @@ func getPlists() []string {
   return files
 }
 
+func getPlist(name string) string {
+  for _, plist := range getPlists() {
+    if strings.Index(plist, name) != -1 {
+      return plist
+    }
+  }
+
+  return ""
+}
+
 func sliceIncludes(slice []string, match string) bool {
   for _, val := range slice {
     if val == match {
