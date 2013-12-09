@@ -132,11 +132,15 @@ func printStatus(args []string) {
   }
 }
 
-func startDaemons(args []string) {
+func exitWithInvalidArgs(args []string, msg string) {
   if len(args) < 3 {
-    fmt.Println("name required")
+    fmt.Println(msg)
     os.Exit(1)
   }
+}
+
+func startDaemons(args []string) {
+  exitWithInvalidArgs(args, "name required")
 
   name := args[2]
 
@@ -160,9 +164,7 @@ func startDaemon(name string) {
 }
 
 func stopDaemons(args []string) {
-  if len(args) < 3 {
-    fatal("name required")
-  }
+  exitWithInvalidArgs(args, "name required")
 
   name := args[2]
 
@@ -186,9 +188,7 @@ func stopDaemon(name string) {
 }
 
 func restartDaemons(args []string) {
-  if len(args) < 3 {
-    fatal("name required")
-  }
+  exitWithInvalidArgs(args, "name required")
 
   name := args[2]
 
@@ -201,9 +201,7 @@ func restartDaemons(args []string) {
 }
 
 func showPlist(args []string) {
-  if len(args) < 3 {
-    fatal("name required")
-  }
+  exitWithInvalidArgs(args, "name required")
 
   name := args[2]
 
@@ -227,9 +225,7 @@ func printPlistContent(name string) {
 }
 
 func editPlist(args []string) {
-  if len(args) < 3 {
-    fatal("name required")
-  }
+  exitWithInvalidArgs(args, "name required")
 
   name := args[2]
 
@@ -259,9 +255,7 @@ func editPlistContent(name string) {
 }
 
 func installPlist(args []string) {
-  if len(args) < 3 {
-    fatal("path required")
-  }
+  exitWithInvalidArgs(args, "path required")
 
   path := args[2]
 
@@ -285,9 +279,7 @@ func installPlist(args []string) {
 }
 
 func removePlist(args []string) {
-  if len(args) < 3 {
-    fatal("name required")
-  }
+  exitWithInvalidArgs(args, "name required")
 
   name := args[2]
   base_path := fmt.Sprintf("%s/%s", os.Getenv("HOME"), "Library/LaunchAgents")
