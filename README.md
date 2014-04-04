@@ -50,7 +50,7 @@ org.mongodb.mongod
 
 ## Install
 
-Download a prebuilt binary for OSX from Bintray: https://bintray.com/sosedoff/generic/lunchy
+Download a prebuilt binary for OSX from Github: https://github.com/sosedoff/lunchy-go/releases
 
 Or you can build it youself if you have Go installed:
 
