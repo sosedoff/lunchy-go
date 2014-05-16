@@ -17,11 +17,11 @@ simple operations that you perform all the time:
 - start [pattern]
 - stop [pattern]
 - restart [pattern]
-- status [pattern]
+- status, ps [pattern]
 - install [file]
 - show [pattern]
 - edit [pattern]
-- remove [pattern]
+- remove, rm [pattern]
 
 where pattern is just a substring that matches the agent's plist filename. 
 
