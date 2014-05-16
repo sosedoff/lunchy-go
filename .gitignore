@@ -23,4 +23,5 @@ _testmain.go
 *.zip
 
 lunchy
+lunchy-go
 .DS_Store
