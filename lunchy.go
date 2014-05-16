@@ -341,7 +341,7 @@ func main() {
 	case "install":
 		installPlist(args)
 		return
-	case "remove":
+	case "remove", "rm":
 		removePlist(args)
 		return
 	}
