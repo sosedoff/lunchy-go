@@ -320,7 +320,7 @@ func main() {
 	case "list", "ls":
 		printList()
 		return
-	case "status":
+	case "status", "ps":
 		printStatus(args)
 		return
 	case "start":
