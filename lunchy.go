@@ -297,6 +297,18 @@ func removePlist(args []string) {
 	}
 }
 
+func scanPath(args []string) {
+	exitWithInvalidArgs(args, "path required")
+
+	out, err := exec.Command("find", args[2], "-name", "*.plist").Output()
+
+	if err != nil {
+		fatal("failed to scan files")
+	}
+
+	fmt.Println(strings.TrimSpace(string(out)))
+}
+
 func fatal(message string) {
 	fmt.Println(message)
 	os.Exit(1)
@@ -343,6 +355,9 @@ func main() {
 		return
 	case "remove", "rm":
 		removePlist(args)
+		return
+	case "scan":
+		scanPath(args)
 		return
 	}
 }
