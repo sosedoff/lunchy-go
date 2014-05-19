@@ -89,7 +89,7 @@ func sliceIncludes(slice []string, match string) bool {
 
 func printUsage() {
 	fmt.Printf("Lunchy %s, the friendly launchctl wrapper\n", LUNCHY_VERSION)
-	fmt.Println("Usage: lunchy [start|stop|restart|list|status|install|show|edit|remove] [options]")
+	fmt.Println("Usage: lunchy [start|stop|restart|list|status|install|show|edit|remove|scan] [options]")
 }
 
 func printList() {
