@@ -22,6 +22,7 @@ simple operations that you perform all the time:
 - show [pattern]
 - edit [pattern]
 - remove, rm [pattern]
+- scan [path]
 
 where pattern is just a substring that matches the agent's plist filename. 
 
@@ -92,6 +93,12 @@ Manage plists:
 ```
 lunchy show redis
 lunchy edit redis
+```
+
+Scan directory for existing plists:
+
+```
+lunchy scan /usr/local/Cellar
 ```
 
 ## License
