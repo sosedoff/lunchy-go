@@ -350,7 +350,7 @@ func main() {
 	case "edit":
 		editPlist(args)
 		return
-	case "install":
+	case "install", "add":
 		installPlist(args)
 		return
 	case "remove", "rm":
