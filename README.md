@@ -51,7 +51,13 @@ org.mongodb.mongod
 
 ## Install
 
-Download a prebuilt binary for OSX from Github: https://github.com/sosedoff/lunchy-go/releases
+You can install binary by running the following bash command:
+
+```
+curl https://raw.githubusercontent.com/sosedoff/lunchy-go/master/install.sh | bash
+```
+
+Binaries are available on Github: https://github.com/sosedoff/lunchy-go/releases
 
 Or you can build it youself if you have Go installed:
 
