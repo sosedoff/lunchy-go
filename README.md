@@ -41,7 +41,8 @@ lunchy start redis
 and:
 
 ```
-> lunchy ls
+$ lunchy ls
+
 com.danga.memcached
 com.google.keystone.agent
 com.mysql.mysqld
@@ -70,6 +71,7 @@ cd lunchy && go build
 Add a new plist:
 
 ```
+# Install plist
 lunchy install /usr/local/Cellar/redis/2.8.1/homebrew.mxcl.redis.plist
 ```
 
@@ -91,6 +93,7 @@ homebrew.mxcl.mysql
 homebrew.mxcl.postgresql
 homebrew.mxcl.redis
 
+# Will stop all processes prefixed by "homebrew"
 $ lunchy stop homebrew
 ```
 
