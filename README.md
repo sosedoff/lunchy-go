@@ -55,7 +55,7 @@ org.mongodb.mongod
 You can install binary by running the following bash command:
 
 ```
-curl https://raw.githubusercontent.com/sosedoff/lunchy-go/master/install.sh | bash
+curl -s https://raw.githubusercontent.com/sosedoff/lunchy-go/master/install.sh | bash
 ```
 
 Binaries are available on Github: https://github.com/sosedoff/lunchy-go/releases
