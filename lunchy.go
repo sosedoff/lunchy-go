@@ -298,10 +298,13 @@ func removePlist(args []string) {
 }
 
 func scanPath(args []string) {
-	exitWithInvalidArgs(args, "path required")
+	path := fmt.Sprintf("%s/%s", os.Getenv("HOME"), "Library/LaunchAgents")
 
-	out, err := exec.Command("find", args[2], "-name", "*.plist").Output()
+	if len(args) >= 3 {
+		path = args[2]
+	}
 
+	out, err := exec.Command("find", path, "-name", "*.plist").Output()
 	if err != nil {
 		fatal("failed to scan files")
 	}
