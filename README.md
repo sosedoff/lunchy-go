@@ -2,7 +2,7 @@
 
 A friendly wrapper for launchctl. Start your agents and go to lunch!
 
-This is a port of original [lunchy](https://github.com/mperham/lunchy) ruby gem by Mike Perham.
+This is a port of original [lunchy](https://github.com/mperham/lunchy) ruby gem by Mike Perham with extra functionality.
 
 [![Release](https://img.shields.io/github/release/sosedoff/lunchy-go.svg)](https://github.com/sosedoff/lunchy-go/releases)
 
@@ -60,12 +60,28 @@ You can install binary by running the following bash command:
 curl -s https://raw.githubusercontent.com/sosedoff/lunchy-go/master/install.sh | bash
 ```
 
-Binaries are available on Github: https://github.com/sosedoff/lunchy-go/releases
+### Homebrew
 
-Or you can build it youself if you have Go installed:
+Formula is available as cask. Make sure you have homebrew-cask installed.
 
 ```
-cd lunchy && go build
+brew install caskroom/cask/brew-cask
+brew cask install lunchy
+```
+
+### Binary Releases
+
+Precompiled binaries are available on Github: https://github.com/sosedoff/lunchy-go/releases
+
+### Build from source
+
+Or you can build it youself if you have Go 1.2+ installed:
+
+```
+git clone https://github.com/sosedoff/lunchy-go.git $GOPATH/src/lunchy
+cd lunchy
+go build
+mv ./lunchy-go /usr/local/bin/lunchy
 ```
 
 ## Usage
