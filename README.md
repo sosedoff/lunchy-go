@@ -4,6 +4,8 @@ A friendly wrapper for launchctl. Start your agents and go to lunch!
 
 This is a port of original [lunchy](https://github.com/mperham/lunchy) ruby gem by Mike Perham.
 
+[![Release](https://img.shields.io/github/release/sosedoff/lunchy-go.svg)](https://github.com/sosedoff/lunchy-go/releases)
+
 ## Overview
 
 Don't you hate OSX's launchctl? You have to give it exact filenames. 
