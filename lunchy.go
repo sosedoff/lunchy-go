@@ -304,12 +304,9 @@ func scanPath(args []string) {
 		path = args[2]
 	}
 
-	out, err := exec.Command("find", path, "-name", "*.plist").Output()
-	if err != nil {
-		fatal("failed to scan files")
+	for _, f := range findPlists(path) {
+		fmt.Println(f)
 	}
-
-	fmt.Println(strings.TrimSpace(string(out)))
 }
 
 func fatal(message string) {
