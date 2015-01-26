@@ -60,7 +60,7 @@ You can install binary by running the following bash command:
 curl -s https://raw.githubusercontent.com/sosedoff/lunchy-go/master/install.sh | bash
 ```
 
-### Homebrew
+#### Homebrew
 
 Formula is available as cask. Make sure you have [homebrew-cask](https://github.com/caskroom/homebrew-cask) installed.
 
@@ -68,11 +68,11 @@ Formula is available as cask. Make sure you have [homebrew-cask](https://github.
 brew cask install lunchy
 ```
 
-### Binary Releases
+#### Binary Releases
 
 Precompiled binaries are available on Github: https://github.com/sosedoff/lunchy-go/releases
 
-### Build from source
+#### Build from source
 
 Or you can build it youself if you have Go 1.2+ installed:
 
