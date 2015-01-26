@@ -31,13 +31,13 @@ where pattern is just a substring that matches the agent's plist filename.
 So instead of:
 
 ```
-launchctl load ~/Library/LaunchAgents/io.redis.redis-server.plist
+$ launchctl load ~/Library/LaunchAgents/io.redis.redis-server.plist
 ```
 
 you can do this:
 
 ```
-lunchy start redis
+$ lunchy start redis
 ```
 
 and:
@@ -89,16 +89,16 @@ Add a new plist:
 
 ```
 # Install plist
-lunchy install /usr/local/Cellar/redis/2.8.1/homebrew.mxcl.redis.plist
+$ lunchy install /usr/local/Cellar/redis/2.8.1/homebrew.mxcl.redis.plist
 ```
 
 Manage services:
 
 ```
-lunchy start redis
-lunchy stop redis
-lunchy restart redis
-lunchy status redis
+$ lunchy start redis
+$ lunchy stop redis
+$ lunchy restart redis
+$ lunchy status redis
 ```
 
 If you have multiple plists from homebrew, you can simple control all of them:
@@ -117,14 +117,14 @@ $ lunchy stop homebrew
 Manage plists:
 
 ```
-lunchy show redis
-lunchy edit redis
+$ lunchy show redis
+$ lunchy edit redis
 ```
 
 Scan directory for existing plists:
 
 ```
-lunchy scan /usr/local/Cellar
+$ lunchy scan /usr/local/Cellar
 ```
 
 ## License
