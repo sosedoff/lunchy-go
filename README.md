@@ -114,4 +114,4 @@ lunchy scan /usr/local/Cellar
 
 The MIT License (MIT)
 
-Copyright (c) 2013-2014 Dan Sosedoff, <dan.sosedoff@gmail.com>
+Copyright (c) 2013-2015 Dan Sosedoff, <dan.sosedoff@gmail.com>
