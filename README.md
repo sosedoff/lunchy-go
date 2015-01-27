@@ -74,7 +74,7 @@ Precompiled binaries are available on Github: https://github.com/sosedoff/lunchy
 
 #### Build from source
 
-Or you can build it youself if you have Go 1.2+ installed:
+Build source code with Go 1.2+:
 
 ```
 git clone https://github.com/sosedoff/lunchy-go.git $GOPATH/src/lunchy
