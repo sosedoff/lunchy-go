@@ -4,6 +4,12 @@ VERSION="0.1.5"
 URL="https://github.com/sosedoff/lunchy-go/releases/download/v${VERSION}/lunchy"
 BIN_PATH="/usr/local/bin/lunchy"
 
+if [ -e $BIN_PATH ]
+then
+  echo "Removing already installed version"
+  rm $BIN_PATH
+fi
+
 echo "Downloading and installing lunchy v${VERSION}"
-wget -q -O $BIN_PATH $URL && chmod +x $BIN_PATH
+curl -sL $URL -o $BIN_PATH && chmod +x $BIN_PATH
 echo "Done. Installed into ${BIN_PATH}"
