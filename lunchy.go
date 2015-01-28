@@ -309,6 +309,57 @@ func scanPath(args []string) {
 	}
 }
 
+// Get full path to lunchy profile file
+func profilePath() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		return ""
+	}
+	return dir + "/.lunchy"
+}
+
+// Get daemon names specified in lunchy profile
+func readProfile() []string {
+	path := profilePath()
+	if path == "" {
+		return []string{}
+	}
+
+	buff, err := ioutil.ReadFile(path)
+	if err != nil {
+		return []string{}
+	}
+
+	result := []string{}
+	lines := strings.Split(strings.TrimSpace(string(buff)), "\n")
+
+	for _, l := range lines {
+		result = append(result, strings.TrimSpace(l))
+	}
+
+	return result
+}
+
+func startProfile() {
+	for _, name := range readProfile() {
+		for _, plist := range getPlists() {
+			if strings.Index(plist, name) != -1 {
+				startDaemon(plist)
+			}
+		}
+	}
+}
+
+func stopProfile() {
+	for _, name := range readProfile() {
+		for _, plist := range getPlists() {
+			if strings.Index(plist, name) != -1 {
+				stopDaemon(plist)
+			}
+		}
+	}
+}
+
 func fatal(message string) {
 	fmt.Println(message)
 	os.Exit(1)
