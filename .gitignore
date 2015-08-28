@@ -22,7 +22,7 @@ _testmain.go
 *.exe
 *.zip
 
-bin/lunchy-go
+bin/*
 lunchy
 lunchy-go
 .DS_Store

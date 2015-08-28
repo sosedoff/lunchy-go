@@ -1,5 +1,5 @@
 build:
-	go build -o ./bin/lunchy-go
+	go build -o ./bin/lunchy
 
 clean:
 	rm -rf ./bin/*
