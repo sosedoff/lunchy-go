@@ -364,7 +364,14 @@ func readProfile() []string {
 	lines := strings.Split(strings.TrimSpace(string(buff)), "\n")
 
 	for _, l := range lines {
-		result = append(result, strings.TrimSpace(l))
+		line := strings.TrimSpace(l)
+
+		// Skip comments (starts with #)
+		if line[0] == 35 {
+			continue
+		}
+
+		result = append(result, line)
 	}
 
 	return result
