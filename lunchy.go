@@ -370,41 +370,39 @@ func readProfile() []string {
 	return result
 }
 
-func startProfile() {
-	fmt.Println("Starting daemons in profile:", profilePath())
+func plistsAction(names []string, action string) {
+	plists := getPlists()
 
-	for _, name := range readProfile() {
-		for _, plist := range getPlists() {
+	for _, name := range names {
+		for _, plist := range plists {
 			if strings.Index(plist, name) != -1 {
-				startDaemon(plist)
+				switch action {
+				case "start":
+					startDaemon(plist)
+				case "stop":
+					stopDaemon(plist)
+				case "restart":
+					stopDaemon(plist)
+					startDaemon(plist)
+				}
 			}
 		}
 	}
+}
+
+func startProfile() {
+	fmt.Println("Starting daemons in profile:", profilePath())
+	plistsAction(readProfile(), "start")
 }
 
 func stopProfile() {
 	fmt.Println("Stopping daemons in profile:", profilePath())
-
-	for _, name := range readProfile() {
-		for _, plist := range getPlists() {
-			if strings.Index(plist, name) != -1 {
-				stopDaemon(plist)
-			}
-		}
-	}
+	plistsAction(readProfile(), "stop")
 }
 
 func restartProfile() {
 	fmt.Println("Restarting daemons in profile:", profilePath())
-
-	for _, name := range readProfile() {
-		for _, plist := range getPlists() {
-			if strings.Index(plist, name) != -1 {
-				stopDaemon(plist)
-				startDaemon(plist)
-			}
-		}
-	}
+	plistsAction(readProfile(), "restart")
 }
 
 func fatal(message string) {
