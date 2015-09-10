@@ -140,9 +140,7 @@ starting lots of different daemons in order to reduce memory usage. This is all
 good but there's a better way of doing it. Enter lunchy profiles.
 
 Profile file `.lunchy` should be placed under your project's root directory and 
-include a list of services that needs to be started or stopped.
-
-Example `.lunchy` file:
+include a list of services that needs to be started or stopped. Example:
 
 ```
 postgres
