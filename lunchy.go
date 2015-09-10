@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	filepath "path"
 	"strings"
 )
 
@@ -45,7 +46,14 @@ func findPlists(path string) []string {
 		return []string{}
 	}
 
-	return strings.Split(strings.TrimSpace(string(output)), "\n")
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	plists := []string{}
+
+	for _, line := range lines {
+		plists = append(plists, strings.Replace(filepath.Base(line), ".plist", "", 1))
+	}
+
+	return plists
 }
 
 func getPlists() []string {
