@@ -6,12 +6,12 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
+	filepath "path"
 	"strings"
 )
 
 const (
-	LUNCHY_VERSION = "0.1.5"
+	LUNCHY_VERSION = "0.1.6"
 )
 
 func fileExists(path string) bool {
@@ -41,23 +41,19 @@ func fileCopy(src string, dst string) error {
 }
 
 func findPlists(path string) []string {
-	result := []string{}
-	files, err := ioutil.ReadDir(path)
-
+	output, err := exec.Command("find", path, "-name", "homebrew.*.plist", "-type", "f").Output()
 	if err != nil {
-		return result
+		return []string{}
 	}
 
-	for _, file := range files {
-		if !file.IsDir() {
-			if (filepath.Ext(file.Name())) == ".plist" {
-				name := strings.Replace(file.Name(), ".plist", "", -1)
-				result = append(result, name)
-			}
-		}
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	plists := []string{}
+
+	for _, line := range lines {
+		plists = append(plists, strings.Replace(filepath.Base(line), ".plist", "", 1))
 	}
 
-	return result
+	return plists
 }
 
 func getPlists() []string {
@@ -302,6 +298,11 @@ func scanPath(args []string) {
 
 	if len(args) >= 3 {
 		path = args[2]
+	}
+
+	// This is a handy override to find all homebrew-based lists
+	if path == "homebrew" {
+		path = "/usr/local/Cellar"
 	}
 
 	for _, f := range findPlists(path) {

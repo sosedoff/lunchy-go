@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="0.1.5"
+VERSION="0.1.6"
 URL="https://github.com/sosedoff/lunchy-go/releases/download/v${VERSION}/lunchy"
 BIN_PATH="/usr/local/bin/lunchy"
 
