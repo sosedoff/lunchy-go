@@ -200,7 +200,15 @@ func stopDaemon(name string) {
 }
 
 func restartDaemons(args []string) {
-	exitWithInvalidArgs(args, "name required")
+	// Check if name pattern is not given and try profiles
+	if len(args) == 2 {
+		if profileExists() {
+			restartProfile()
+			return
+		} else {
+			exitWithInvalidArgs(args, "name required")
+		}
+	}
 
 	name := args[2]
 
@@ -381,6 +389,19 @@ func stopProfile() {
 		for _, plist := range getPlists() {
 			if strings.Index(plist, name) != -1 {
 				stopDaemon(plist)
+			}
+		}
+	}
+}
+
+func restartProfile() {
+	fmt.Println("Restarting daemons in profile:", profilePath())
+
+	for _, name := range readProfile() {
+		for _, plist := range getPlists() {
+			if strings.Index(plist, name) != -1 {
+				stopDaemon(plist)
+				startDaemon(plist)
 			}
 		}
 	}
