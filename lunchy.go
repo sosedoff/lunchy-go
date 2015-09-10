@@ -136,7 +136,15 @@ func exitWithInvalidArgs(args []string, msg string) {
 }
 
 func startDaemons(args []string) {
-	exitWithInvalidArgs(args, "name required")
+	// Check if name pattern is not given and try profiles
+	if len(args) == 2 {
+		if profileExists() {
+			startProfile()
+			return
+		} else {
+			exitWithInvalidArgs(args, "name required")
+		}
+	}
 
 	name := args[2]
 
@@ -160,7 +168,15 @@ func startDaemon(name string) {
 }
 
 func stopDaemons(args []string) {
-	exitWithInvalidArgs(args, "name required")
+	// Check if name pattern is not given and try profiles
+	if len(args) == 2 {
+		if profileExists() {
+			stopProfile()
+			return
+		} else {
+			exitWithInvalidArgs(args, "name required")
+		}
+	}
 
 	name := args[2]
 
@@ -184,7 +200,15 @@ func stopDaemon(name string) {
 }
 
 func restartDaemons(args []string) {
-	exitWithInvalidArgs(args, "name required")
+	// Check if name pattern is not given and try profiles
+	if len(args) == 2 {
+		if profileExists() {
+			restartProfile()
+			return
+		} else {
+			exitWithInvalidArgs(args, "name required")
+		}
+	}
 
 	name := args[2]
 
@@ -308,6 +332,84 @@ func scanPath(args []string) {
 	for _, f := range findPlists(path) {
 		fmt.Println(f)
 	}
+}
+
+// Get full path to lunchy profile file
+func profilePath() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		return ""
+	}
+	return dir + "/.lunchy"
+}
+
+// Check if profile file exists
+func profileExists() bool {
+	return fileExists(profilePath())
+}
+
+// Get daemon names specified in lunchy profile
+func readProfile() []string {
+	path := profilePath()
+	if path == "" {
+		return []string{}
+	}
+
+	buff, err := ioutil.ReadFile(path)
+	if err != nil {
+		return []string{}
+	}
+
+	result := []string{}
+	lines := strings.Split(strings.TrimSpace(string(buff)), "\n")
+
+	for _, l := range lines {
+		line := strings.TrimSpace(l)
+
+		// Skip comments (starts with #)
+		if line[0] == 35 {
+			continue
+		}
+
+		result = append(result, line)
+	}
+
+	return result
+}
+
+func plistsAction(names []string, action string) {
+	plists := getPlists()
+
+	for _, name := range names {
+		for _, plist := range plists {
+			if strings.Index(plist, name) != -1 {
+				switch action {
+				case "start":
+					startDaemon(plist)
+				case "stop":
+					stopDaemon(plist)
+				case "restart":
+					stopDaemon(plist)
+					startDaemon(plist)
+				}
+			}
+		}
+	}
+}
+
+func startProfile() {
+	fmt.Println("Starting daemons in profile:", profilePath())
+	plistsAction(readProfile(), "start")
+}
+
+func stopProfile() {
+	fmt.Println("Stopping daemons in profile:", profilePath())
+	plistsAction(readProfile(), "stop")
+}
+
+func restartProfile() {
+	fmt.Println("Restarting daemons in profile:", profilePath())
+	plistsAction(readProfile(), "restart")
 }
 
 func fatal(message string) {
