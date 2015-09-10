@@ -136,7 +136,15 @@ func exitWithInvalidArgs(args []string, msg string) {
 }
 
 func startDaemons(args []string) {
-	exitWithInvalidArgs(args, "name required")
+	// Check if name pattern is not given and try profiles
+	if len(args) == 2 {
+		if profileExists() {
+			startProfile()
+			return
+		} else {
+			exitWithInvalidArgs(args, "name required")
+		}
+	}
 
 	name := args[2]
 
@@ -160,7 +168,15 @@ func startDaemon(name string) {
 }
 
 func stopDaemons(args []string) {
-	exitWithInvalidArgs(args, "name required")
+	// Check if name pattern is not given and try profiles
+	if len(args) == 2 {
+		if profileExists() {
+			stopProfile()
+			return
+		} else {
+			exitWithInvalidArgs(args, "name required")
+		}
+	}
 
 	name := args[2]
 
@@ -319,6 +335,11 @@ func profilePath() string {
 	return dir + "/.lunchy"
 }
 
+// Check if profile file exists
+func profileExists() bool {
+	return fileExists(profilePath())
+}
+
 // Get daemon names specified in lunchy profile
 func readProfile() []string {
 	path := profilePath()
@@ -342,6 +363,8 @@ func readProfile() []string {
 }
 
 func startProfile() {
+	fmt.Println("Starting daemons in profile:", profilePath())
+
 	for _, name := range readProfile() {
 		for _, plist := range getPlists() {
 			if strings.Index(plist, name) != -1 {
@@ -352,6 +375,8 @@ func startProfile() {
 }
 
 func stopProfile() {
+	fmt.Println("Stopping daemons in profile:", profilePath())
+
 	for _, name := range readProfile() {
 		for _, plist := range getPlists() {
 			if strings.Index(plist, name) != -1 {
