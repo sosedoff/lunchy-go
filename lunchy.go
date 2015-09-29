@@ -41,7 +41,7 @@ func fileCopy(src string, dst string) error {
 }
 
 func findPlists(path string) []string {
-	output, err := exec.Command("find", path, "-name", "homebrew.*.plist", "-type", "f").Output()
+	output, err := exec.Command("find", "-L", path, "-name", "*.plist", "-type", "f").Output()
 	if err != nil {
 		return []string{}
 	}
