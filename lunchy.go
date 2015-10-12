@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	LUNCHY_VERSION = "0.2.0"
+	LUNCHY_VERSION = "0.2.1"
 )
 
 func fileExists(path string) bool {
