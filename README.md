@@ -62,10 +62,10 @@ curl -s https://raw.githubusercontent.com/sosedoff/lunchy-go/master/install.sh |
 
 #### Homebrew
 
-Formula is available as cask. Make sure you have [homebrew-cask](https://github.com/caskroom/homebrew-cask) installed.
+Install using [Homebrew](https://brew.sh):
 
 ```
-brew cask install lunchy
+brew install lunchy-go
 ```
 
 #### Binary Releases
