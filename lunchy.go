@@ -47,9 +47,18 @@ type Plist struct {
 	Path string
 }
 
-func findPlists(dir string) []Plist {
+type option struct {
+	name  string
+	value interface{}
+}
+
+func findPlists(dir string, options ...option) []Plist {
 	plists := []Plist{}
-	output, err := exec.Command("find", "-L", dir, "-name", "*.plist", "-type", "f").Output()
+	args := []string{"-L", dir, "-name", "*.plist", "-type", "f"}
+	for _, option := range options {
+		args = append(args, option.name, fmt.Sprintf("%v", option.value))
+	}
+	output, err := exec.Command("find", args...).Output()
 	if err != nil {
 		return plists
 	}
@@ -58,6 +67,10 @@ func findPlists(dir string) []Plist {
 		name := strings.Replace(path.Base(plistPath), ".plist", "", 1)
 		plists = append(plists, Plist{name, plistPath})
 	}
+
+	sort.SliceStable(plists, func(i, j int) bool {
+		return plists[i].Name < plists[j].Name
+	})
 
 	return plists
 }
@@ -338,6 +351,7 @@ func removePlist(args []string) {
 }
 
 func scanPath(args []string) {
+	options := []option{}
 	dir := path.Join(os.Getenv("HOME"), "/Library/LaunchAgents")
 
 	if len(args) >= 3 {
@@ -345,11 +359,17 @@ func scanPath(args []string) {
 	}
 
 	// This is a handy override to find all homebrew-based lists
-	if dir == "homebrew" {
-		dir = "/usr/local/Cellar"
+	if dir == "homebrew" || dir == "Homebrew" {
+		prefix := "/usr/local"
+		output, _ := exec.Command("brew", "--prefix").Output()
+		if output != nil {
+			prefix = strings.TrimSpace(string(output))
+		}
+		dir = path.Join(prefix, "/Cellar")
+		options = append(options, option{"-maxdepth", 3})
 	}
 
-	for _, plist := range findPlists(dir) {
+	for _, plist := range findPlists(dir, options...) {
 		fmt.Println(plist.Name)
 	}
 }
