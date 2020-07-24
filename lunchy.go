@@ -137,8 +137,8 @@ func printUsage() {
 func printList(args []string) {
 	pattern := ""
 
-	if len(args) == 3 {
-		pattern = args[2]
+	if len(args) > 0 {
+		pattern = args[0]
 	}
 
 	for _, plist := range getPlists() {
@@ -157,8 +157,8 @@ func printStatus(args []string) {
 
 	pattern := ""
 
-	if len(args) == 3 {
-		pattern = args[2]
+	if len(args) > 0 {
+		pattern = args[0]
 	}
 
 	installed := []string{}
@@ -190,7 +190,7 @@ func printStatus(args []string) {
 }
 
 func exitWithInvalidArgs(args []string, msg string) {
-	if len(args) < 3 {
+	if len(args) < 1 {
 		fmt.Println(msg)
 		os.Exit(1)
 	}
@@ -198,7 +198,7 @@ func exitWithInvalidArgs(args []string, msg string) {
 
 func startDaemons(args []string) {
 	// Check if name pattern is not given and try profiles
-	if len(args) == 2 {
+	if len(args) == 0 {
 		if profileExists() {
 			startProfile()
 			return
@@ -206,7 +206,7 @@ func startDaemons(args []string) {
 		exitWithInvalidArgs(args, "name required")
 	}
 
-	name := args[2]
+	name := args[0]
 	startDaemon(getPlist(name))
 }
 
@@ -223,7 +223,7 @@ func startDaemon(plist Plist) {
 
 func stopDaemons(args []string) {
 	// Check if name pattern is not given and try profiles
-	if len(args) == 2 {
+	if len(args) == 0 {
 		if profileExists() {
 			stopProfile()
 			return
@@ -231,7 +231,7 @@ func stopDaemons(args []string) {
 		exitWithInvalidArgs(args, "name required")
 	}
 
-	name := args[2]
+	name := args[0]
 	stopDaemon(getPlist(name))
 }
 
@@ -248,7 +248,7 @@ func stopDaemon(plist Plist) {
 
 func restartDaemons(args []string) {
 	// Check if name pattern is not given and try profiles
-	if len(args) == 2 {
+	if len(args) == 0 {
 		if profileExists() {
 			restartProfile()
 			return
@@ -256,7 +256,7 @@ func restartDaemons(args []string) {
 		exitWithInvalidArgs(args, "name required")
 	}
 
-	name := args[2]
+	name := args[0]
 	plist := getPlist(name)
 	stopDaemon(plist)
 	startDaemon(plist)
@@ -265,7 +265,7 @@ func restartDaemons(args []string) {
 func showPlist(args []string) {
 	exitWithInvalidArgs(args, "name required")
 
-	name := args[2]
+	name := args[0]
 	printPlistContent(getPlist(name))
 }
 
@@ -282,7 +282,7 @@ func printPlistContent(plist Plist) {
 func editPlist(args []string) {
 	exitWithInvalidArgs(args, "name required")
 
-	name := args[2]
+	name := args[0]
 	editPlistContent(getPlist(name))
 }
 
@@ -305,7 +305,7 @@ func editPlistContent(plist Plist) {
 func installPlist(args []string) {
 	exitWithInvalidArgs(args, "path required")
 
-	srcPath := args[2]
+	srcPath := args[0]
 
 	if !fileExists(srcPath) {
 		fatal("source file does not exist")
@@ -341,7 +341,7 @@ func installPlist(args []string) {
 func removePlist(args []string) {
 	exitWithInvalidArgs(args, "name required")
 
-	name := args[2]
+	name := args[0]
 	plist := getPlist(name)
 	if os.Remove(plist.Path) == nil {
 		fmt.Println("removed", plist.Path)
@@ -351,12 +351,10 @@ func removePlist(args []string) {
 }
 
 func scanPath(args []string) {
+	exitWithInvalidArgs(args, "path required")
+
 	options := []option{}
 	dir := path.Join(os.Getenv("HOME"), "/Library/LaunchAgents")
-
-	if len(args) >= 3 {
-		dir = args[2]
-	}
 
 	// This is a handy override to find all homebrew-based lists
 	if dir == "homebrew" || dir == "Homebrew" {
@@ -473,34 +471,34 @@ func main() {
 		printUsage()
 		return
 	case "list", "ls":
-		printList(args)
+		printList(args[2:])
 		return
 	case "status", "ps":
-		printStatus(args)
+		printStatus(args[2:])
 		return
 	case "start":
-		startDaemons(args)
+		startDaemons(args[2:])
 		return
 	case "stop":
-		stopDaemons(args)
+		stopDaemons(args[2:])
 		return
 	case "restart":
-		restartDaemons(args)
+		restartDaemons(args[2:])
 		return
 	case "show":
-		showPlist(args)
+		showPlist(args[2:])
 		return
 	case "edit":
-		editPlist(args)
+		editPlist(args[2:])
 		return
 	case "install", "add":
-		installPlist(args)
+		installPlist(args[2:])
 		return
 	case "remove", "rm", "uninstall":
-		removePlist(args)
+		removePlist(args[2:])
 		return
 	case "scan":
-		scanPath(args)
+		scanPath(args[2:])
 		return
 	}
 }
