@@ -1,0 +1,64 @@
+#compdef lunchy
+
+_lunchy() {
+  _arguments -s -C \
+    '1: :__lunchy_commands' \
+    '*::arg:->args'
+
+  case "$state" in
+    (args)
+      case "${words[1]}" in
+        (help|ls|list)
+          return 1
+          ;;
+        (add|install)
+          _arguments \
+            '1:launch agent:_files -g "*.plist"'
+          ;;
+        (scan)
+          _arguments \
+            '1: : _alternative
+              "((homebrew\:Find\ all\ Homebrew\ launch\ agents))"
+              "dirs:dir:_directories"'
+          ;;
+        (*)
+          _arguments \
+            '1:launch agent:__lunchy_launch_agents'
+          ;;
+      esac
+      ;;
+  esac
+}
+
+(( $+functions[__lunchy_commands] )) ||
+__lunchy_commands() {
+  local -a commands
+  commands=(
+    'help:Show help'
+    'ls:List launch agents'
+    'list:List launch agents'
+    'ps:Show launch agent status'
+    'status:Show launch agent status'
+    'start:Start launch agent'
+    'stop:Stop launch agent'
+    'restart:Restart launch agent'
+    'show:Show the contents of the launch agent file'
+    'edit:Open the launch agent file in the default editor'
+    'add:Install launch agent to ~/Library/LaunchAgents'
+    'install:Install launch agent to ~/Library/LaunchAgents'
+    'rm:Uninstall launch agent from ~/Library/LaunchAgents'
+    'remove:Uninstall launch agent from ~/Library/LaunchAgents'
+    'scan:Scan directory for launch agent files'
+  )
+  _describe -t commands 'commands' commands "$@"
+}
+
+(( $+functions[__lunchy_launch_agents] )) ||
+function __lunchy_launch_agents() {
+  local -a launch_agents
+  local expl
+  launch_agents=("${(@f)$(command lunchy list)}" )
+  _wanted launch_agents expl 'launch agents' compadd -a launch_agents
+}
+
+_lunchy "$@"
